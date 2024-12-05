@@ -59,20 +59,6 @@ const DotGridScene = () => {
               wasd-controls
               position="0 0 0"
             >
-              {/* UI Elements */}
-              <a-entity
-                position="0 -0.5 -1"
-                geometry="primitive: plane; width: 1; height: 0.5"
-                material="color: #444; opacity: 0.7"
-              >
-                <a-text
-                  value="Click anywhere to enter VR"
-                  align="center"
-                  color="#fff"
-                  position="0 0 0.1"
-                  scale="0.5 0.5 0.5"
-                ></a-text>
-              </a-entity>
 
               {/* Black sky */}
               <a-sky color="black"></a-sky>
