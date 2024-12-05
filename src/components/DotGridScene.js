@@ -14,19 +14,15 @@ const DotGridScene = () => {
   const intervalRef = useRef(null);
 
   const createRandomDot = () => {
-    // Grid dimensions
     const rows = 8;
     const cols = 9;
 
-    // Calculate precise grid positioning
     const xStep = 0.1;
     const yStep = 0.1;
 
-    // Generate random column and row
     const randomCol = Math.floor(Math.random() * cols);
     const randomRow = Math.floor(Math.random() * rows);
 
-    // Calculate x and y positions
     const x = (randomCol - (cols - 1) / 2) * xStep;
     const y = (randomRow - (rows - 1) / 2) * yStep;
 
@@ -34,84 +30,71 @@ const DotGridScene = () => {
   };
 
   useEffect(() => {
-    // Create first dot immediately
     createRandomDot();
-
-    // Set interval to change dot every 200ms
     intervalRef.current = setInterval(createRandomDot, 200);
 
-    // Cleanup interval on component unmount
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
 
-  useEffect(() => {
-    // Automatically enter VR mode when the scene is loaded
-    const enterVR = () => {
-      const scene = document.querySelector('a-scene');
-      if (scene && scene.enterVR) {
-        scene.enterVR();
-      }
-    };
-
-    window.addEventListener('load', enterVR);
-
-    return () => {
-      window.removeEventListener('load', enterVR);
-    };
-  }, []);
+  const handleEnterVR = () => {
+    const scene = document.querySelector('a-scene');
+    if (scene && scene.enterVR) {
+      scene.enterVR();
+    }
+  };
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen" onClick={handleEnterVR}>
       <AFrameScene>
-        <a-entity
-          id="rig"
-          position="0 1.6 0"
-          movement-controls="fly: true"
-        >
-          <a-camera
-            look-controls
-            wasd-controls
-            position="0 0 0"
+        <a-scene embedded vr-mode-ui="enabled: true" xrdebug>
+          <a-entity
+            id="rig"
+            position="0 1.6 0"
+            movement-controls="fly: true"
           >
-            {/* UI Elements */}
-            <a-entity
-              position="0 -0.5 -1"
-              geometry="primitive: plane; width: 1; height: 0.5"
-              material="color: #444; opacity: 0.7"
+            <a-camera
+              look-controls
+              wasd-controls
+              position="0 0 0"
             >
-              <a-text
-                value="You are in VR mode"
-                align="center"
-                color="#fff"
-                position="0 0 0.1"
-                scale="0.5 0.5 0.5"
-              ></a-text>
-            </a-entity>
+              {/* UI Elements */}
+              <a-entity
+                position="0 -0.5 -1"
+                geometry="primitive: plane; width: 1; height: 0.5"
+                material="color: #444; opacity: 0.7"
+              >
+                <a-text
+                  value="Click anywhere to enter VR"
+                  align="center"
+                  color="#fff"
+                  position="0 0 0.1"
+                  scale="0.5 0.5 0.5"
+                ></a-text>
+              </a-entity>
 
-            {/* Black sky */}
-            <a-sky color="black"></a-sky>
+              {/* Black sky */}
+              <a-sky color="black"></a-sky>
 
-            <DotGrid></DotGrid>
+              <DotGrid></DotGrid>
 
-            {/* Center red dot */}
-            <a-entity
-              geometry="primitive: sphere; radius: 0.005"
-              material="color: red; opacity: 1"
-              position={`${redPos.x} ${redPos.y} -1`}
-            ></a-entity>
+              {/* Center red dot */}
+              <a-entity
+                geometry="primitive: sphere; radius: 0.005"
+                material="color: red; opacity: 1"
+                position={`${redPos.x} ${redPos.y} -1`}
+              ></a-entity>
 
-            {/* Dynamic yellow dot */}
-            <a-sphere
-              radius="0.005"
-              color="yellow"
-              position={`${dotPosition.x} ${dotPosition.y} -1`}
-            ></a-sphere>
-          </a-camera>
-        </a-entity>
+              {/* Dynamic yellow dot */}
+              <a-sphere
+                radius="0.005"
+                color="yellow"
+                position={`${dotPosition.x} ${dotPosition.y} -1`}
+              ></a-sphere>
+            </a-camera>
+          </a-entity>
+        </a-scene>
       </AFrameScene>
     </div>
   );
